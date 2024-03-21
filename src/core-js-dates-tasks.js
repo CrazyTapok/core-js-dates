@@ -149,8 +149,18 @@ function getCountDaysOnPeriod(dateStart, dateEnd) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const start = new Date(period.start);
+  const end = new Date(period.end);
+  const currentDate = new Date(date);
+
+  let answer = false;
+
+  if (currentDate <= end && currentDate >= start) {
+    answer = true;
+  }
+
+  return answer;
 }
 
 /**
@@ -164,8 +174,16 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const newDate = new Date(date);
+  const year = newDate.getUTCFullYear();
+  const month = `${newDate.getUTCMonth() + 1}`;
+  const day = `${newDate.getUTCDate()}`;
+  const time = newDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+
+  const answer = `${month}/${day}/${year}, ${time}`;
+
+  return answer;
 }
 
 /**
@@ -180,8 +198,19 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const countDay = new Date(year, month, 0).getDate();
+  let answer = 0;
+
+  for (let i = 1; i <= countDay; i += 1) {
+    const day = new Date(year, month - 1, i);
+
+    if (day.getDay() === 0 || day.getDay() === 6) {
+      answer += 1;
+    }
+  }
+
+  return answer;
 }
 
 /**
@@ -197,8 +226,12 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const start = new Date(date.getFullYear(), 0, 1);
+  const countDays = (date - start) / (24 * 60 * 60 * 1000);
+  const answer = Math.ceil((countDays + start.getDay() + 1) / 7);
+
+  return answer;
 }
 
 /**
