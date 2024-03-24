@@ -247,8 +247,18 @@ function getWeekNumberByDate(date) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const newDate = new Date(date.getTime());
+  let find = false;
+
+  while (!find) {
+    newDate.setDate(newDate.getDate() + 1);
+    if (newDate.getDay() === 5 && newDate.getDate() === 13) {
+      find = true;
+    }
+  }
+
+  return newDate;
 }
 
 /**
@@ -287,8 +297,45 @@ function getQuarter(date) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const startDateArr = period.start.split('-');
+  const endDateArr = period.end.split('-');
+  const endDate = new Date(endDateArr[2], endDateArr[1] - 1, endDateArr[0]);
+
+  const workSchedule = [];
+  const currentDate = new Date(
+    startDateArr[2],
+    startDateArr[1] - 1,
+    startDateArr[0]
+  );
+
+  while (currentDate <= endDate) {
+    for (let i = 0; i < countWorkDays; i += 1) {
+      if (currentDate > endDate) {
+        break;
+      }
+
+      const day = currentDate.getDate();
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
+
+      workSchedule.push(
+        `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`
+      );
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    for (let j = 0; j < countOffDays; j += 1) {
+      if (currentDate > endDate) {
+        break;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  }
+
+  return workSchedule;
 }
 
 /**
